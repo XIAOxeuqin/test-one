@@ -1,44 +1,35 @@
-#include "Executor.h"
-namespace adas
-{
-// 类的声明在adas空间作用域内，因此在实现类的成员时，要使用空间作用域解析符
-// 在函数声明时，已经明确了默认参数，因此在实现时，无需加上默认值
+#include"Executor.h"
+namespace adas {
+//类的声明在adas空间作用域内，因此在实现类的成员时，要使用空间作用域解析符
+//在函数声明时，已经明确了默认参数，因此在实现时，无需加上默认值
 
-bool operator ==(const Pose& A, const Pose& B) {
-    return (A.x == B.x) && (A.y == B.y) && (A.heading == B.heading);
+bool operator ==(const Pose& poseA,const Pose& poseB) {
+    return (poseA.x == poseB.x) && (poseA.y == poseB.y) && (poseA.heading == poseB.heading);
 }
 
-// 构造
-Executor* Executor::NewExecutor(const Pose &my_pose) {
-    auto* p = new Executor();
-    p->pose = my_pose;
+//构造
+Executor* Executor::NewExecutor(const Pose &myPose) {
+    auto* p=new Executor();
+    p->pose=myPose;
+    InitIndex(p ,myPose);
     return p;
 }
-// 转向
-void Executor::Execute(const std::string& command){
-    for(int i=0; command[i]!='\0'; i++){
-        if (command[i] == 'M') {
-            switch (this->pose.heading) {
-            case 'N':
-                this->pose.y++;
-                break;
-            case 'E':
-                this->pose.x++;
-                break;
-            case 'S':
-                this->pose.y--;
-                break;
-            case 'W':
-                this->pose.x--;
-                break;
-            default:
-                break;
-            }
+
+Executor:: Executor(){
+    pose={0,0,'N'};
+    index=0;
+}
+
+//转向
+void Executor::Execute(const std::string& commands){
+    for(int i=0;commands[i]!='\0';i++){
+        if (commands[i] == 'M') {
+            MoveForward();
         }
-        else if (command[i] == 'L'){
+        else if (commands[i] =='L'){
             TurnLeft();
         }
-        else if (command[i] == 'R'){
+        else if (commands[i] == 'R'){
             TurnRight();
         }
         else {
@@ -46,31 +37,38 @@ void Executor::Execute(const std::string& command){
         }
     }
 }
-Pose Executor::Query() {
-    //std::cout<<"("<<this->pose.x<<","<<this->pose.y<<","<<this->pose.heading<<")"<<std::endl;
+
+Pose Executor:: Query(){
     return this->pose;
 }
 
-void Executor::TurnLeft() {
+void Executor:: MoveForward(){
     switch (this->pose.heading) {
-    case 'N': this->pose.heading = 'W'; break;
-    case 'E': this->pose.heading = 'N'; break;
-    case 'S': this->pose.heading = 'E'; break;
-    case 'W': this->pose.heading = 'S'; break;
-    default: break;
+    case 'N': this->pose.y++; break;
+    case 'E': this->pose.x++; break;
+    case 'S': this->pose.y--; break;
+    case 'W': this->pose.x--; break;
+    default : break;
     }
 }
 
+void Executor::TurnLeft() {
+    index = (index - 1 + 4) % 4;
+    pose.heading = directions[index];
+}
+
 void Executor::TurnRight() {
-    switch (this->pose.heading) {
-    case 'N': this->pose.heading = 'E'; break;
-    case 'E': this->pose.heading = 'S'; break;
-    case 'S': this->pose.heading = 'W'; break;
-    case 'W': this->pose.heading = 'N'; break;
-    default: break;
+    index = (index + 1) % 4;
+    pose.heading = directions[index];
+}
+
+
+void Executor:: InitIndex( Executor* &p ,const Pose &myPose){
+    for(int i=0;i<4;i++){
+        if(p->directions[i]!=myPose.heading)continue;
+        p->index=i;
+        break;
     }
 }
+
 }
-//
-// Created by DELL on 2024/11/23.
-//

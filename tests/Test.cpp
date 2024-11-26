@@ -1,6 +1,3 @@
-//
-// Created by DELL on 2024/11/23.
-//
 #include <gtest/gtest.h>
 #include"Executor.h"
 namespace adas
@@ -62,6 +59,3 @@ TEST(ExecutorTest,should_return_1_0_given_command_is_M_and_facing_is_E)
 }
 
 }
-//
-// Created by DELL on 2024/11/23.
-//
