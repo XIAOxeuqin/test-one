@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include<map>
+
 namespace adas {
 
 struct Pose {
@@ -12,40 +12,28 @@ struct Pose {
         return x == other.x && y == other.y && heading == other.heading;
     }
 };
-extern char directions[4];
-extern std::map<char, int> directions2index;
+
 class Executor {
 public:
-    static Executor* NewExecutor(const Pose& pose = {0, 0, 'N'}) noexcept;
-    Executor(void) = default;
-    virtual ~Executor(void) = default;
-    Executor(const Executor&) = delete;
-    Executor& operator=(const Executor&) = delete;
+    // 纯虚函数，用于执行命令
     virtual void Execute(const std::string& command) noexcept = 0;
+    // 查询当前位置和方向
     virtual Pose Query(void) const noexcept = 0;
-    virtual void Move()=0;
-    virtual void TurnLeft()=0;
-    virtual void TurnRight()=0;
-    virtual void Fast()=0;
+    // 纯虚函数，用于移动
+    virtual void Move() noexcept = 0;
+    // 纯虚函数，用于左转
+    virtual void TurnLeft() noexcept = 0;
+    // 纯虚函数，用于右转
+    virtual void TurnRight() noexcept = 0;
+    // 纯虚函数，用于加速
+    virtual void Fast() noexcept = 0;
+    // 纯虚函数，用于倒车
+    virtual void Reverse() noexcept = 0;
 
-private:
-    Pose m_Pose{};
+    // 虚析构函数以确保派生类的析构函数被调用
+    virtual ~Executor() = default;
 
-public:
-    int index=0;
+
 };
 
-class ICommand {
-public:
-    virtual ~ICommand() = default;
-    virtual void DoOperate(Executor& executor) const noexcept = 0;
-};
-
-}  // namespace adas//
-// Created by DELL on 2024/12/7.
-//
-
-#ifndef EXECUTOR_H
-#define EXECUTOR_H
-
-#endif //EXECUTOR_H
+}  // namespace adas

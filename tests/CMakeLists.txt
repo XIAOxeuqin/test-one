@@ -6,7 +6,9 @@ ADD_EXECUTABLE(training_main ${SOURCE}
         Executor_Test.cpp
         Executor_Test.cpp
         Executor_Test.cpp
-        Executor_Test.cpp)
+        Executor_Test.cpp
+        googletest/test.cpp
+)
 TARGET_LINK_LIBRARIES(training_main training gtest_main)
 
 ADD_TEST(NAME training_main COMMAND training_main)
