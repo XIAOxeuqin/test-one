@@ -6,6 +6,9 @@ LIST(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 ADD_COMPILE_OPTIONS("-Wall")
 ADD_COMPILE_OPTIONS("-Werror")
-ADD_LIBRARY(training ${SOURCE})
+ADD_LIBRARY(training ${SOURCE}
+        ../include/Executor.h
+        ../include/Executor.h
+        Executor.cpp)
 
 TARGET_INCLUDE_DIRECTORIES(training PUBLIC "${INCLUDE}")
